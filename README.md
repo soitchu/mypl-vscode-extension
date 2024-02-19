@@ -1,14 +1,5 @@
-# LSP Example
-
-Heavily documented sample code for https://code.visualstudio.com/api/language-extensions/language-server-extension-guide
-
-## Functionality
-
-This Language Server works for plain text file. It has the following language features:
-- Completions
-- Diagnostics regenerated on each file change or configuration change
-
-It also includes an End-to-End test.
+# Configuration
+./server/config.json has a field named "myplPath" which should be set to mypl.py's full path
 
 ## Structure
 
@@ -21,7 +12,8 @@ It also includes an End-to-End test.
 ├── package.json // The extension manifest.
 └── server // Language Server
     └── src
-        └── server.ts // Language Server entry point
+        ├── server.ts // Language Server entry point
+        └── config.json
 ```
 
 ## Running the Sample
