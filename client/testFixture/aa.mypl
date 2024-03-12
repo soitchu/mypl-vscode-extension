@@ -1,0 +1,12 @@
+struct Node {
+    int a;
+    Node next;
+}
+
+
+void main() {
+    int a = 10;
+    if(a >= 10) {
+        array int i = new int[10];
+    }
+}

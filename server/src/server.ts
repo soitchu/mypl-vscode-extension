@@ -6,7 +6,6 @@ import {
 	createConnection,
 	TextDocuments,
 	Diagnostic,
-	DiagnosticSeverity,
 	ProposedFeatures,
 	InitializeParams,
 	DidChangeConfigurationNotification,
@@ -20,16 +19,7 @@ import {
 import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
-import { ChildProcess, exec, spawn } from 'child_process';
-import { readFileSync } from 'fs';
-import path = require('path');
-
-
-const config = JSON.parse(
-	readFileSync(
-		path.join(__dirname, "../config.json")
-		, "utf8")
-);
+import { spawn } from 'child_process';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -41,6 +31,19 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
+
+const autoCompletableIds = [
+	"not",  "or", "and",
+	">=", "<=", "==", 
+	"int", "double", "string", "bool", "void",
+	"struct", "array", "for", "while", "if", "elseif", "else", "new", "return"
+].map((value: string, index: number) => {
+	return {
+		label: value,
+		kind: CompletionItemKind.Text,
+		data: index
+	}
+});
 
 connection.onInitialize((params: InitializeParams) => {
 	const capabilities = params.capabilities;
@@ -144,10 +147,12 @@ documents.onDidChangeContent(change => {
 	validateTextDocument(change.document);
 });
 
-async function getParserError(textDocument: TextDocument, mode: "parse" | "lex") {
-	return new Promise((resolve, reject) => {
-		const child = spawn('python', [config.myplPath, `--${mode}`]);
+async function getParserError(textDocument: TextDocument, mode: "parse" | "lex" | "check") {
+	let myplPath = (await connection.workspace.getConfiguration("mypl")).myplExecutablePath;
 
+	return new Promise((resolve, reject) => {
+		const child = spawn('python', [myplPath, `--${mode}`]);
+		
 		child.stdout?.on("data", function (data: Buffer) {
 			resolve(data.toString());
 		});
@@ -167,18 +172,17 @@ async function getParserError(textDocument: TextDocument, mode: "parse" | "lex")
 }
 
 async function validateTextDocument(textDocument: TextDocument): Promise<void> {
-
-	const errorMessage = (await getParserError(textDocument, "parse")) as string;
-
+	const errorMessage = (await getParserError(textDocument, "check")) as string;
+	
 	const diagnostics: Diagnostic[] = [];
 
 	if (errorMessage && errorMessage.includes("line")) {
+
 		const atIndex = errorMessage.lastIndexOf("at");
 
 		const positionDataString = errorMessage.split("line")[1];
 		const line = parseInt(positionDataString);
 		const column = parseInt(positionDataString.split("column")[1]);
-		console.log(line, column, errorMessage);
 
 		diagnostics.push({
 			range: {
@@ -211,33 +215,7 @@ connection.onCompletion(
 		// The pass parameter contains the position of the text document in
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
-		return [
-			{
-				label: 'if',
-				kind: CompletionItemKind.Text,
-				data: 1
-			},
-			{
-				label: 'while',
-				kind: CompletionItemKind.Text,
-				data: 2
-			},
-			{
-				label: 'not',
-				kind: CompletionItemKind.Text,
-				data: 3
-			},
-			{
-				label: 'and',
-				kind: CompletionItemKind.Text,
-				data: 4
-			},
-			{
-				label: 'or',
-				kind: CompletionItemKind.Text,
-				data: 5
-			}
-		];
+		return autoCompletableIds;
 	}
 );
 
@@ -245,12 +223,6 @@ connection.onCompletion(
 // the completion list.
 connection.onCompletionResolve(
 	(item: CompletionItem): CompletionItem => {
-		// if (item.data === 1) {
-		// 	item.detail = 'TypeScrirrrpt details';
-		// } else if (item.data === 2) {
-		// 	item.detail = 'JavaScript details';
-		// 	item.documentation = 'JavaScript documentation';
-		// }
 		return item;
 	}
 );

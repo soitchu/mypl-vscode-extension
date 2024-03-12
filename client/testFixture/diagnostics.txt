@@ -1,6 +1,6 @@
 int a() {
     int a_3 = 0.3;
-    int b = 20;
+    bool b = 2.0;
     
     for(let i = 0; i < r; i = 30 * (30 + 30 * 400)) {
 

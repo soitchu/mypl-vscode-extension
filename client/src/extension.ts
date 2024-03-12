@@ -3,8 +3,9 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 
+import { spawn } from 'child_process';
 import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
+import { workspace, ExtensionContext, languages, TextEdit, Range, Position } from 'vscode';
 
 import {
 	LanguageClient,
@@ -34,7 +35,7 @@ export function activate(context: ExtensionContext) {
 	// Options to control the language client
 	const clientOptions: LanguageClientOptions = {
 		// Register the server for plain text documents
-		documentSelector: [{ scheme: 'file', language: 'plaintext' }],
+		documentSelector: [{ scheme: 'file', language: 'mypl' }],
 		synchronize: {
 			// Notify the server about file changes to '.clientrc files contained in the workspace
 			fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
@@ -52,6 +53,47 @@ export function activate(context: ExtensionContext) {
 	// Start the client. This will also launch the server
 	client.start();
 }
+
+async function getPrettyPrintedCode(code: string) {
+	const myplPath = workspace.getConfiguration("mypl").get("myplExecutablePath") as string;
+
+	return new Promise((resolve, reject) => {
+		const child = spawn('python', [myplPath, `--print`]);
+		
+		child.stdout?.on("data", function (data: Buffer) {
+			resolve(data.toString());
+		});
+
+		child.stdout?.on("error", function (data: Buffer) {
+			reject(data.toString());
+		});
+
+		child.stdout.on("close", function (data: Buffer) {
+			resolve("");
+		});
+
+		child.stdin.write(code);
+		child.stdin.end();
+	});
+
+}
+
+languages.registerDocumentFormattingEditProvider('mypl', {
+	async provideDocumentFormattingEdits(document) {
+
+		const formattedCode = await getPrettyPrintedCode(document.getText()) as string;
+
+		if(formattedCode.startsWith("Parser Error") || formattedCode.startsWith("Lexer Error") || formattedCode.startsWith("Print Error")) {
+			return [];
+		}
+
+		return [TextEdit.replace(
+			new Range(
+				document.lineAt(0).range.start,
+				document.lineAt(document.lineCount - 1).rangeIncludingLineBreak.end,
+			), formattedCode)];
+	}
+});
 
 export function deactivate(): Thenable<void> | undefined {
 	if (!client) {
