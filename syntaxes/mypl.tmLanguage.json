@@ -84,6 +84,12 @@
 					"include": "#types"
 				},
 				{
+					"include": "#keywords"
+				},
+				{
+					"include": "#strings"
+				},
+				{
 					"begin": "(?x)\n(?!(?:while|for|if|elseif|else|return)\\s*\\()\n(\n(?:[A-Za-z_][A-Za-z0-9_]*+|::)++  # actual name\n|\n(?:(?<=operator)(?:[-*&<>=+!]+|\\(\\)|\\[\\]))\n)\n\\s*(\\()",
 					"beginCaptures": {
 						"1": {

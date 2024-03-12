@@ -1,5 +1,5 @@
 {
-	"name": "lsp-sample",
+	"name": "mypl",
 	"description": "A language server example",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
@@ -8,7 +8,7 @@
 		"type": "git",
 		"url": "https://github.com/Microsoft/vscode-extension-samples"
 	},
-	"publisher": "vscode-samples",
+	"publisher": "soitchu",
 	"categories": [],
 	"keywords": [
 		"multi-root ready"
@@ -16,6 +16,9 @@
 	"engines": {
 		"vscode": "^1.75.0"
 	},
+	"activationEvents": [
+		"onLanguage:mypl"
+	],
 	"main": "./client/out/extension",
 	"contributes": {
 		"configuration": {
@@ -83,5 +86,8 @@
 		"eslint": "^8.56.0",
 		"mocha": "^10.2.0",
 		"typescript": "^5.3.3"
+	},
+	"dependencies": {
+		"@vscode/vsce": "^2.24.0"
 	}
 }

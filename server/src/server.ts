@@ -36,7 +36,8 @@ const autoCompletableIds = [
 	"not",  "or", "and",
 	">=", "<=", "==", 
 	"int", "double", "string", "bool", "void",
-	"struct", "array", "for", "while", "if", "elseif", "else", "new", "return"
+	"struct", "array", "for", "while", "if", "elseif", "else", "new", "return",
+	"print", "input", "itos", "itod", "dtos", "dtoi", "stoi", "stod", "length", "get"
 ].map((value: string, index: number) => {
 	return {
 		label: value,
