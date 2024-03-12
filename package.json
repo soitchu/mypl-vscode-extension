@@ -3,13 +3,14 @@
 	"description": "A language server and formatter for mypl",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/soitchu/mypl-vscode-extension"
 	},
 	"publisher": "soitchu",
 	"categories": [],
+	"icon": "icon/icon.png",
 	"keywords": [
 		"mypl",
 		"lsp",
