@@ -1,5 +1,5 @@
 # Configuration
-./server/config.json has a field named "myplPath" which should be set to mypl.py's full path
+The extension by default tries to call /bin/mypl, but this can be changed by changing mypl.myplExecutablePath to the actual path of the executable.
 
 ## Structure
 
