@@ -45,7 +45,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.mypl",
-				"match": "\\b(if|elseif|else|while|for|return|new|struct)\\b"
+				"match": "\\b(if|elseif|else|while|for|return|new|struct|function|delete)\\b"
 			}]
 		},
 		"strings": {
@@ -62,7 +62,7 @@
 		"types": {
 			"patterns": [
 				{
-					"match": "(?-mix:(?<!\\w)(?:void|bool|int|string|array|true|false|null)(?!\\w))",
+					"match": "(?-mix:(?<!\\w)(?:void|bool|int|string|array|true|false|null|double)(?!\\w))",
 					"name": "storage.type.built-in.primitive.c"
 				}
 			]

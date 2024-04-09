@@ -1,1 +1,18 @@
-wad asdasd
+struct Node {
+	Node next;
+	int b;
+	string c;
+}
+
+void main() {
+	array Node nodes = new Node[10];
+	bool b = true;
+	bool c = false;
+
+	bool a = not ((not (1 == 20) == (false == b) or c) or (true and false));
+
+	for(int i = 0; i < length(nodes); i = i + 1) {
+		Node current_node = nodes[i];
+		current_node.next = new Node(null, 10, "string");
+	}
+}
