@@ -1,9 +1,10 @@
 {
-	"name": "mypl",
-	"description": "A language server and formatter for mypl",
+	"name": "mywasm",
+	"displayName": "MyWASM (and MyPL)",
+	"description": "A language server and formatter for MyWASM, an extension of MyPL",
 	"author": "Microsoft Corporation",
 	"license": "MIT",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/soitchu/mypl-vscode-extension"
@@ -13,6 +14,7 @@
 	"icon": "icon/icon.png",
 	"keywords": [
 		"mypl",
+		"mywasm",
 		"lsp",
 		"language server"
 	],
@@ -51,7 +53,6 @@
 			{
 				"id": "mypl",
 				"aliases": [
-					"mypl",
 					"mypl"
 				],
 				"extensions": [
