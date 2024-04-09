@@ -28,11 +28,6 @@
 			"type": "object",
 			"title": "Example configuration",
 			"properties": {
-				"mypl.myplExecutablePath": {
-					"type": "string",
-					"default": "/bin/mypl",
-					"description": "mypl's executable path"
-				},
 				"mypl.maxNumberOfProblems": {
 					"scope": "resource",
 					"type": "number",

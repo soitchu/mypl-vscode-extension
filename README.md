@@ -1,6 +1,3 @@
-# Configuration
-The extension by default tries to call /bin/mypl, but this can be changed by changing mypl.myplExecutablePath to the actual path of the executable.
-
 ## Structure
 
 ```

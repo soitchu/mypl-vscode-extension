@@ -54,34 +54,35 @@ export function activate(context: ExtensionContext) {
 	client.start();
 }
 
-async function getPrettyPrintedCode(code: string) {
-	const myplPath = workspace.getConfiguration("mypl").get("myplExecutablePath") as string;
+function getPrettyPrintedCode(code: string) {
+	return code;
+	// const myplPath = workspace.getConfiguration("mypl").get("myplExecutablePath") as string;
 
-	return new Promise((resolve, reject) => {
-		const child = spawn('python', [myplPath, `--print`]);
+	// return new Promise((resolve, reject) => {
+	// 	const child = spawn('python', [myplPath, `--print`]);
 		
-		child.stdout?.on("data", function (data: Buffer) {
-			resolve(data.toString());
-		});
+	// 	child.stdout?.on("data", function (data: Buffer) {
+	// 		resolve(data.toString());
+	// 	});
 
-		child.stdout?.on("error", function (data: Buffer) {
-			reject(data.toString());
-		});
+	// 	child.stdout?.on("error", function (data: Buffer) {
+	// 		reject(data.toString());
+	// 	});
 
-		child.stdout.on("close", function (data: Buffer) {
-			resolve("");
-		});
+	// 	child.stdout.on("close", function (data: Buffer) {
+	// 		resolve("");
+	// 	});
 
-		child.stdin.write(code);
-		child.stdin.end();
-	});
+	// 	child.stdin.write(code);
+	// 	child.stdin.end();
+	// });
 
 }
 
 languages.registerDocumentFormattingEditProvider('mypl', {
 	async provideDocumentFormattingEdits(document) {
 
-		const formattedCode = await getPrettyPrintedCode(document.getText()) as string;
+		const formattedCode = getPrettyPrintedCode(document.getText()) as string;
 
 		if(formattedCode.startsWith("Parser Error") || formattedCode.startsWith("Lexer Error") || formattedCode.startsWith("Print Error")) {
 			return [];
