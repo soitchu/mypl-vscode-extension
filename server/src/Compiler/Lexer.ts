@@ -1,5 +1,6 @@
 import { StringBuffer } from "./StringBuffer";
 import { ErrorType, MyWASMError, Token, TokenType } from "./types";
+import { EOL } from "node:os";
 
 const single_char_map = {
     ".": TokenType.DOT,
@@ -100,7 +101,7 @@ export class Lexer {
     }
 
     isSpace(char: string) {
-        return char == " " || char == "\n" || char == "\t";
+        return char == " " || char == EOL || char == "\t" || char == "\r" || char == "\n";
     }
 
     is_valid_id(ch: string) {
@@ -127,7 +128,7 @@ export class Lexer {
 
             // If it's a new line, we must reset the 
             // column number and increment column number
-            if (this.lexeme == "\n") {
+            if (this.lexeme == EOL) {
                 this.column = 0;
                 this.line += 1;
             }
@@ -155,7 +156,7 @@ export class Lexer {
 
             // Since we don't support multiline comments
             // we should stop when we read a newline or EOF
-            while (nextCh != "\n" && !this.eof(nextCh)) {
+            while (nextCh != EOL && !this.eof(nextCh)) {
                 this.read()
                 this.lexeme += nextCh;
                 nextCh = this.peek();
@@ -172,7 +173,7 @@ export class Lexer {
         this.token_type = TokenType.STRING_VAL;
         this.lexeme = ""
 
-        while (nextCh != "\"" && !this.eof(nextCh) && nextCh != "\n") {
+        while (nextCh != "\"" && !this.eof(nextCh) && nextCh != EOL) {
             this.read()
             this.lexeme += nextCh;
             nextCh = this.peek();

@@ -7,6 +7,7 @@ import fs from "node:fs";
 import { Lexer } from "./Lexer";
 import { ASTParser } from "./AST";
 import { StringBuffer } from "./StringBuffer";
+import { EOL } from "node:os";
 
 const STRICT_MODE = true;
 const UNSTRICT_MODE = false;
@@ -432,7 +433,7 @@ export class SemanticChecker extends Visitor{
         
     output_in_new_line(msg: string){
         if(this.should_output){
-            this.output("\n");
+            this.output(EOL);
             this.output_indent()
             this.output(msg)
         }
@@ -767,7 +768,7 @@ export class SemanticChecker extends Visitor{
                     name = fun.return_type.namespace.lexeme + "_" + name
                 }
 
-                this.core_functions += `(export "${fun.original_name}" (func $${name}))\n`
+                this.core_functions += `(export "${fun.original_name}" (func $${name}))${EOL}`
             }
             
             if(fun.return_type.namespace !== undefined){
@@ -877,7 +878,7 @@ export class SemanticChecker extends Visitor{
             this.core_functions += `(global \$${var_name} (mut ${wasm_type}) (${wasm_type}.const ${WASM.getWASMValue(var_value)}))`
         }
 
-        this.output("\n\n")
+        this.output(EOL + EOL)
             
         // # check each struct
         for(const struct in this.structs){
@@ -1032,7 +1033,7 @@ export class SemanticChecker extends Visitor{
                         did_print_return = true
                     }
 
-                    this.output("\n")
+                    this.output(EOL)
                 }
                 
                 const type_name = data_type.type_name
@@ -1052,7 +1053,7 @@ export class SemanticChecker extends Visitor{
         }
 
         for(const stmt of stmt_buffers){
-            this.output("\n")
+            this.output(EOL)
             this.output(stmt)
         }
         
@@ -1064,9 +1065,9 @@ export class SemanticChecker extends Visitor{
         this.output_in_new_line("return")
         this.indent-=1
         
-        this.output("\n")
+        this.output(EOL)
         this.output_with_indent(")")
-        this.output("\n\n")
+        this.output(EOL + EOL)
         this.flush()
     }
         
@@ -1075,7 +1076,7 @@ export class SemanticChecker extends Visitor{
 
         this.visit_expr(return_stmt.expr, undefined, false)
                 
-        this.output("\n")
+        this.output(EOL)
         this.output_with_indent("return")
         
         const expr_type = this.get_curr_token(40, this.get_first_rvalue_token(return_stmt.expr))
@@ -1595,7 +1596,7 @@ export class SemanticChecker extends Visitor{
                     this.global_offset += 4
                 }
 
-                this.data_section += "\")\n"
+                this.data_section += "\")" + EOL
             }
 
             this.output_in_new_line(`i32.const ${this.string_map[value.lexeme]}`)
